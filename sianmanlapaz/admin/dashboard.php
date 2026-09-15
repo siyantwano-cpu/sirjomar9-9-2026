@@ -1,3 +1,18 @@
+<?php
+    session_start();
+    include "../config/database.php";
+    //only admin can access this page.
+
+    if (!isset($_SESSION["role"]) || $_SESSION["role"] !="admin") {
+        header("Location: ../index.php");
+        exit;
+
+    }
+    $student = mysqli_query($conn, "SELECT id FROM users WHERE role  =  'student'");
+    $subject = mysqli_query($conn, "SELECT id FROM 'subjects'");
+    $enrollments = mysqli_query($conn, "SELECT id FROM 'enrollments'");
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -50,7 +65,7 @@
         <h2>Admin Dashboard</h2>
 
         <p class="text-muted">
-            Welcome, System Administrator.
+            Welcome, <?php echo htmlspecialchars($_SESSION["full_name"]); ?>.
         </p>
 
         <div class="row g-3">
@@ -62,7 +77,7 @@
 
                         <h6>Student Accounts</h6>
 
-                        <h2>10</h2>
+                        <h2><?php echo mysqli_num_rows($student);   ?></h2>
 
                         <a
                             href="students.html"
